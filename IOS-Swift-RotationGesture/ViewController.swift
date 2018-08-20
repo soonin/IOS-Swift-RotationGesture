@@ -10,16 +10,32 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var viewRotate: UIImageView!
+    var rotateGesture  = UIRotationGestureRecognizer()
+    var lastRotation   = CGFloat()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        //ROTATE Gesture
+        rotateGesture = UIRotationGestureRecognizer(target: self, action: #selector(ViewController.rotatedView(_:)))
+        viewRotate.addGestureRecognizer(rotateGesture)
+        viewRotate.isUserInteractionEnabled = true
+        viewRotate.isMultipleTouchEnabled = true
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @objc func rotatedView(_ sender : UIRotationGestureRecognizer){
+        var lastRotation = CGFloat()
+        self.view.bringSubview(toFront: viewRotate)
+        if(sender.state == UIGestureRecognizerState.ended){
+            lastRotation = 0.0;
+        }
+        let rotation = 0.0 - (lastRotation - sender.rotation)
+        // var point = rotateGesture.location(in: viewRotate)
+        let currentTrans = sender.view?.transform
+        let newTrans = currentTrans!.rotated(by: rotation)
+        sender.view?.transform = newTrans
+        lastRotation = sender.rotation
     }
-
 
 }
 
